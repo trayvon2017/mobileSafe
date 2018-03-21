@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -49,8 +50,8 @@ public class SplashActivity extends Activity {
     private static final int HIGH_VERSION = 100;
     private static final int NO_HIGH_VERSION = 101;
     private static final  int JSON_ERROR =102;
-    private static final  String DOWNLOAD_URL = "http://10.0.2.2:8080/***.apk";
-    private static final String VERSIONINFOURL = "http://10.0.2.2:8080/version.json";
+    private static final  String DOWNLOAD_URL = "http://192.168.1.100:8080/update.apk";
+    private static final String VERSIONINFOURL = "http://192.168.1.100:8080/version.json";
     private TextView tv_versionName;
     private ProgressBar pb_request;
     private Context mContext;
@@ -76,6 +77,7 @@ public class SplashActivity extends Activity {
             super.handleMessage(msg);
         }
     };
+    private long mStartTime;
 
     /**
      * 弹出升级新版本的对话框
@@ -116,10 +118,11 @@ public class SplashActivity extends Activity {
      * 下载安装，更新版本
      */
     private void downloadAndInstall() {
-
+        x.Ext.init(getApplication());
         final ProgressDialog pd = new ProgressDialog(mContext);
         RequestParams params = new RequestParams(DOWNLOAD_URL);
-        params.setSaveFilePath(Environment.getExternalStorageDirectory().getPath()+"mobileSafe.apk");
+        String path = Environment.getExternalStorageDirectory().getPath() + "/mobileSafe.apk";
+        params.setSaveFilePath(path);
         x.http().get(params, new Callback.ProgressCallback<File>(){
             @Override
             public void onWaiting() {
@@ -144,11 +147,13 @@ public class SplashActivity extends Activity {
                 ToastUtils.makeToast(mContext,"下载完成");
                 pd.dismiss();
                 // TODO 调用系统应用安装apk文件 PackageInstallerActivity
+                installApp(result);
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 ToastUtils.makeToast(mContext,"检查网络或者sd卡状态");
+                openHomePage();
             }
 
             @Override
@@ -161,6 +166,20 @@ public class SplashActivity extends Activity {
 
             }
         });
+    }
+
+    private void installApp(File result) {
+        Intent intent = new Intent("android.intent.action.VIEW");
+        intent.addCategory("android.intent.category.DEFAULT");
+        intent.setDataAndType(Uri.fromFile(result),"application/vnd.android.package-archive");
+        startActivityForResult(intent,0);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode==0){
+            openHomePage();
+        }
     }
 
     private String mVersionFeature;
@@ -194,6 +213,7 @@ public class SplashActivity extends Activity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    mStartTime = System.currentTimeMillis();
                     Message msg = Message.obtain();
 
                     try {
@@ -252,6 +272,14 @@ public class SplashActivity extends Activity {
      * 进入主页面的activity
      */
     private void openHomePage() {
+        long endTime = System.currentTimeMillis();
+        if ((endTime-mStartTime)<4*1000){
+            try {
+                Thread.sleep(4*1000-(endTime-mStartTime));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
