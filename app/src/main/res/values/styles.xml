@@ -8,5 +8,23 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <!-- <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textSize="28sp"
+        android:background="#0f0"
+        android:gravity="center"
+        android:text="这是主页面" />-->
+    <style name="MyTitleStyle">
+        <!-- Customize your theme here. -->
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:background">#0f0</item>
+        <item name="android:gravity">center</item>
+    </style>
 
 </resources>

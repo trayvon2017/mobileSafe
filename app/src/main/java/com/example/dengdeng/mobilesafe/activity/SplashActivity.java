@@ -18,11 +18,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
+import android.view.animation.AlphaAnimation;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dengdeng.mobilesafe.R;
+import com.example.dengdeng.mobilesafe.utils.ConstantValues;
+import com.example.dengdeng.mobilesafe.utils.SpUtils;
 import com.example.dengdeng.mobilesafe.utils.StreamUtils;
 import com.example.dengdeng.mobilesafe.utils.ToastUtils;
 
@@ -187,12 +191,43 @@ public class SplashActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splash);
+
         //找到需要操作的控件
         myFindView();
-        initData();
+        initUI();
 
+        if (SpUtils.getBoolean(getApplicationContext(), ConstantValues.UPDATE_VALUE,false)){
+            initData();
+        }else {
+            mHandler.sendEmptyMessageDelayed(NO_HIGH_VERSION,3*1000);
+        }
+
+
+        initAnimation();
+    }
+
+    private void initUI() {
+        PackageManager pm = mContext.getPackageManager();
+        //通过packageInfo获取到本地的版本信息，版本信息其实存储在
+        //AndroidManiFest.xml文件中
+        PackageInfo pi = null;
+        try {
+            pi = pm.getPackageInfo(mContext.getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        mLocalVersionCode = pi.versionCode;
+        mVersionName = pi.versionName;
+        tv_versionName.setText("版本名称：" + pi.versionName);
+    }
+
+    private void initAnimation() {
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.rl_root);
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
+        alphaAnimation.setDuration(3*1000);
+        layout.startAnimation(alphaAnimation);
     }
 
     /**
@@ -201,14 +236,9 @@ public class SplashActivity extends Activity {
      * 2:获取到服务端的版本信息
      */
     private void initData() {
-        PackageManager pm = mContext.getPackageManager();
-        try {
-            //通过packageInfo获取到本地的版本信息，版本信息其实存储在
-            //AndroidManiFest.xml文件中
-            PackageInfo pi = pm.getPackageInfo(mContext.getPackageName(), 0);
-            mLocalVersionCode = pi.versionCode;
-            mVersionName = pi.versionName;
-            tv_versionName.setText("版本名称：" + pi.versionName);
+
+
+
             //网络请求获取到服务端的版本信息
             new Thread(new Runnable() {
                 @Override
@@ -250,10 +280,13 @@ public class SplashActivity extends Activity {
                                 msg.what = NO_HIGH_VERSION;
 
                             }
+                        }else{
+                            openHomePage();
                         }
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
+                        openHomePage();
                         e.printStackTrace();
                     } catch (JSONException e) {
                         msg.what = JSON_ERROR;
@@ -263,9 +296,7 @@ public class SplashActivity extends Activity {
                     }
                 }
             }).start();
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+
     }
 
     /**
@@ -280,7 +311,6 @@ public class SplashActivity extends Activity {
                 e.printStackTrace();
             }
         }
-
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
         finish();
