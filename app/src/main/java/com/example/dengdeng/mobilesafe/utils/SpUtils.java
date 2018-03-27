@@ -38,5 +38,18 @@ public class SpUtils {
         boolean result = sp.getBoolean(key, def);
         return result;
     }
+    public static void putString(Context context,String key,String value){
+        if(sp == null){
+            sp = context.getSharedPreferences("config",Context.MODE_PRIVATE);
+        }
+        sp.edit().putString(key,value).commit();
+    }
+    public static String getString(Context context,String key,String def){
+        if(sp == null){
+            sp = context.getSharedPreferences("config",Context.MODE_PRIVATE);
+        }
+        return sp.getString(key,def);
+    }
+
 
 }
