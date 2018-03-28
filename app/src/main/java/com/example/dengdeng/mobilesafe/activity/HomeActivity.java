@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.dengdeng.mobilesafe.R;
 import com.example.dengdeng.mobilesafe.utils.ConstantValues;
+import com.example.dengdeng.mobilesafe.utils.Md5Utils;
 import com.example.dengdeng.mobilesafe.utils.SpUtils;
 import com.example.dengdeng.mobilesafe.utils.ToastUtils;
 
@@ -55,7 +57,7 @@ public class HomeActivity extends AppCompatActivity {
                         //首先判断是否已经存储了密码，
                         String psd_str = SpUtils.getString(getApplicationContext(), ConstantValues.MOBILE_SAFE_PSD,"");
                         if(TextUtils.isEmpty(psd_str)){
-                            //未存储的话就弹出新建密码的对话框
+                            //未存储的就弹出新建密码的话对话框
                             createPsd();
                         }else{
                             //存储了的话就直接弹出输入密码的对话框，
@@ -75,7 +77,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void login() {
-//这里只能使用this，不能使用getApplicationContext()
+        //这里只能使用this，不能使用getApplicationContext()
         AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
         final AlertDialog dialog = builder.create();
         dialog.setView(View.inflate(getApplicationContext(),R.layout.login_dialog,null));
@@ -95,7 +97,8 @@ public class HomeActivity extends AppCompatActivity {
                 }else{
                     String result = SpUtils.getString(getApplicationContext(),ConstantValues.MOBILE_SAFE_PSD,"");
                     //先判断密码是否相等
-                    if(result.equals(login_psd_str)){
+                    if(result.equals(Md5Utils.md5Code(login_psd_str))){
+                        Log.d("md5md5", "onClick: +"+result );
                         //进入手机防盗页面
                         dialog.dismiss();
                         Intent intent = new Intent(HomeActivity.this,PhoneSafeActivity.class);
@@ -138,7 +141,7 @@ public class HomeActivity extends AppCompatActivity {
                 if(!TextUtils.isEmpty(new_psd_str)&&!TextUtils.isEmpty(confirm_psd_str)){
                     //先判断密码是否相等
                     if(new_psd_str.equals(confirm_psd_str)){
-                        SpUtils.putString(getApplicationContext(),ConstantValues.MOBILE_SAFE_PSD,new_psd_str);
+                        SpUtils.putString(getApplicationContext(),ConstantValues.MOBILE_SAFE_PSD, Md5Utils.md5Code(new_psd_str));
                         //进入手机防盗页面
                         dialog.dismiss();
                         Intent intent = new Intent(HomeActivity.this,PhoneSafeActivity.class);

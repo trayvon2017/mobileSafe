@@ -51,5 +51,15 @@ public class SpUtils {
         return sp.getString(key,def);
     }
 
-
+    /**
+     * 清楚保存的某个属性
+     * @param context
+     * @param key 要清除的对象
+     */
+    public static void remove(Context context, String key) {
+        if(sp == null){
+            sp = context.getSharedPreferences("config",Context.MODE_PRIVATE);
+        }
+        sp.edit().remove(key).commit();
+    }
 }
