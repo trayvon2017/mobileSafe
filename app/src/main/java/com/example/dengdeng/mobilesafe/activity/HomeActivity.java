@@ -103,6 +103,7 @@ public class HomeActivity extends AppCompatActivity {
                         dialog.dismiss();
                         Intent intent = new Intent(HomeActivity.this,PhoneSafeActivity.class);
                         startActivity(intent);
+
                     }else{
                         ToastUtils.makeToast(getApplicationContext(),"密码错误，请重新输入");
                     }
