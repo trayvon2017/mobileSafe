@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -26,7 +27,8 @@ public class Setup3Activity extends AppCompatActivity {
 
     private EditText et_phone_num;
     private ArrayList<HashMap> list;
-
+    private long x1=0;
+    private long x2=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,7 @@ public class Setup3Activity extends AppCompatActivity {
             Intent intent = new Intent(this, Setup4Activity.class);
             startActivity(intent);
             finish();
+            overridePendingTransition(R.anim.next_in,R.anim.next_out);
         }else {
             ToastUtils.makeToast(getApplicationContext(),"请先绑定手机号");
         }
@@ -63,6 +66,7 @@ public class Setup3Activity extends AppCompatActivity {
         Intent intent = new Intent(this, Setup2Activity.class);
         startActivity(intent);
         finish();
+        overridePendingTransition(R.anim.previous_in,R.anim.previous_out);
     }
     //选中之后读取本地联系人
     public void chooseContacts(View view) {
@@ -80,5 +84,42 @@ public class Setup3Activity extends AppCompatActivity {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch(event.getAction()){
+            case MotionEvent.ACTION_DOWN :
+                x1 = (long) event.getX();
+                break;
+            case MotionEvent.ACTION_UP :
+                x2 = (long) event.getX();
+                if(x1-x2>20){
+                    //左滑和nextButton一样的逻辑
+                    Intent intent = new Intent(this, Setup4Activity.class);
+                    startActivity(intent);
+                    finish();
+                    overridePendingTransition(R.anim.next_in,R.anim.next_out);
+
+                }else if(x1-x2<20){
+                    //右滑和previousButton一样的逻辑
+                    Intent intent = new Intent(this, Setup2Activity.class);
+                    startActivity(intent);
+                    finish();
+                    overridePendingTransition(R.anim.previous_in,R.anim.previous_out);
+                }
+                break;
+           /* case :MotionEvent.ACTION_DOWN
+                    x1 = event.getX();
+            break;
+
+			case:MotionEvent.ACTION_UP
+                    x2 = event.getX();
+
+            break;*/
+        }
+
+
+
+        return super.onTouchEvent(event);
     }
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 
@@ -15,7 +16,8 @@ import com.example.dengdeng.mobilesafe.utils.ToastUtils;
 public class Setup4Activity extends AppCompatActivity {
 
     private CheckBox cb_complete;
-
+    private long x1=0;
+    private long x2=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +58,7 @@ public class Setup4Activity extends AppCompatActivity {
             Intent intent = new Intent(this, PhoneSafeActivity.class);
             startActivity(intent);
             finish();
+            overridePendingTransition(R.anim.next_in,R.anim.next_out);
         }else{
             ToastUtils.makeToast(getApplicationContext(),"请先完成设置");
         }
@@ -66,6 +69,45 @@ public class Setup4Activity extends AppCompatActivity {
         Intent intent = new Intent(this, Setup3Activity.class);
         startActivity(intent);
         finish();
+        overridePendingTransition(R.anim.previous_in,R.anim.previous_out);
+    }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch(event.getAction()){
+            case MotionEvent.ACTION_DOWN :
+                x1 = (long) event.getX();
+                break;
+            case MotionEvent.ACTION_UP :
+                x2 = (long) event.getX();
+
+
+                if(x1-x2>20){
+                    //左滑和nextButton一样的逻辑
+                    Intent intent = new Intent(this, PhoneSafeActivity.class);
+                    startActivity(intent);
+                    finish();
+                    overridePendingTransition(R.anim.next_in,R.anim.next_out);
+
+                }else if(x1-x2<20){
+                    //右滑和previousButton一样的逻辑
+                    Intent intent = new Intent(this, Setup3Activity.class);
+                    startActivity(intent);
+                    finish();
+                    overridePendingTransition(R.anim.previous_in,R.anim.previous_out);
+                }
+                break;
+           /* case :MotionEvent.ACTION_DOWN
+                    x1 = event.getX();
+            break;
+
+			case:MotionEvent.ACTION_UP
+                    x2 = event.getX();
+
+            break;*/
+        }
+
+
+        return super.onTouchEvent(event);
     }
 
 }
