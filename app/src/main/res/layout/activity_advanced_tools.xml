@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.dengdeng.mobilesafe.activity.AdvancedToolsActivity">
+    <TextView
+        android:text="高级工具"
+        style="@style/MyTitleStyle"/>
+    <TextView
+        android:id="@+id/tv_guishudi"
+        android:drawableLeft="@android:drawable/star_big_on"
+        android:clickable="true"
+        android:text="归属地查询"
+        android:gravity="center"
+        android:background="@drawable/selector_tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:drawableLeft="@android:drawable/star_big_on"
+        android:clickable="true"
+        android:text="短信备份"
+        android:gravity="center"
+        android:background="@drawable/selector_tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:drawableLeft="@android:drawable/star_big_on"
+        android:clickable="true"
+        android:text="常用号码查询"
+        android:gravity="center"
+        android:background="@drawable/selector_tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:drawableLeft="@android:drawable/star_big_on"
+        android:clickable="true"
+        android:text="程序锁"
+        android:gravity="center"
+        android:background="@drawable/selector_tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
