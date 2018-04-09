@@ -6,6 +6,7 @@ import android.os.IBinder;
 import android.support.annotation.IntDef;
 import android.telephony.SmsManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.baidu.location.Address;
 import com.baidu.location.BDAbstractLocationListener;
@@ -31,15 +32,12 @@ public class MyLocationService extends Service {
         super.onCreate();
 
     }
-
     @Override
     public int onStartCommand(Intent intent,  int flags, int startId) {
         mLocationClient = new LocationClient(getApplicationContext());
         mLocationClient.registerLocationListener(mLocationListener);
         LocationClientOption option = new LocationClientOption();
-//        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
-//        option.setCoorType("bd09ll");
-//        option.setOpenGps(true);
+
         option.setIsNeedAddress(true);
         mLocationClient.setLocOption(option);
         mLocationClient.start();
@@ -50,21 +48,8 @@ public class MyLocationService extends Service {
 
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
-            /*double latitude = bdLocation.getLatitude();
-            double altitude = bdLocation.getAltitude();
-            Log.d(TAG, "onReceiveLocation: latitude:"+latitude+",altitude:"+altitude);*/
-            Address address = bdLocation.getAddress();
-            String country = address.country;
-            String province = address.province;
-            String city = address.city;
-            String district = address.district;
-            String street = address.street;
-            String address_str = "country:"+
-                    country+",province:"+province+",city:"+city+",district:"+district+",street:"+street;
-            Log.d(TAG, "onReceiveLocation: "+address_str);
-            ToastUtils.makeToast(getApplicationContext(),address_str);
-//            SmsManager manager = SmsManager.getDefault();
-//            manager.sendTextMessage(SpUtils.getString(getApplicationContext(), ConstantValues.PHONE_NUM,""),null,address_str,null,null);
+            String addr = bdLocation.getAddrStr();    //获取详细地址信息
+            ToastUtils.makeToast(getApplicationContext(),addr);
         }
     }
     @Override
