@@ -9,6 +9,7 @@ import android.media.MediaPlayer;
 import android.telephony.SmsMessage;
 
 import com.example.dengdeng.mobilesafe.R;
+import com.example.dengdeng.mobilesafe.service.MyLocationService;
 import com.example.dengdeng.mobilesafe.utils.ToastUtils;
 
 public class MySmsReceiver extends BroadcastReceiver {
@@ -28,10 +29,10 @@ public class MySmsReceiver extends BroadcastReceiver {
             String originatingAddress = sms.getOriginatingAddress();
             String messageBody = sms.getMessageBody();
             if (messageBody.contains("#*location*#")){
-                //发送本机的gps定位给安全手机
-                //1 获取到本机的经纬度坐标
+                //开启服务
 
-                //2 发送短信给安全手机
+                Intent intent1 = new Intent(context, MyLocationService.class);
+                context.startService(intent1);
 
 
             }else if (messageBody.contains("#*alarm*#")){
