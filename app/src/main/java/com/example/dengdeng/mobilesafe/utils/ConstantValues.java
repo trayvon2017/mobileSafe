@@ -15,4 +15,10 @@ public class ConstantValues {
     public static final int SHOWCONTACTS_OK = 1;
     public static final String PHONE_NUM = "phone_num";
     public static final String SETTING_COMPLETE = "setting_complete";
+
+    public static final String ADDRESS_STYLE_NUM = "address_style_num" ;
+    public static final String DRAG_LEFT = "drag_left";
+    public static final String DRAG_TOP = "drag_top";
+    public static final String DRAG_RIGHT = "drag_right";
+    public static final String DRAG_BOTTOM = "drag_bottom";
 }

@@ -24,6 +24,9 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
+    <!-- 窗口中添加组件的权限 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -92,7 +95,14 @@
             android:process=":remote" />
 
         <activity android:name=".activity.AdvancedToolsActivity" />
-        <activity android:name=".activity.LookForGuishudiActivity"></activity>
+        <activity android:name=".activity.LookForGuishudiActivity" />
+
+        <service
+            android:name=".service.PhoneAddressService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".activity.AddressLocationActivity"></activity>
     </application>
 
 </manifest>

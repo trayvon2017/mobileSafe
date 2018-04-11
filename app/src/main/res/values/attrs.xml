@@ -4,5 +4,10 @@
         <attr name="destitle" format="string"/>
         <attr name="desoff" format="string"/>
         <attr name="deson" format="string"/>
+        <attr name="des" format="string"/>
     </declare-styleable>
+    <!--<declare-styleable name="com.example.dengdeng.mobilesafe.view.SettingClickView">
+        <attr name="destitle" format="string"/>
+        <attr name="des" format="string"/>
+    </declare-styleable>-->
 </resources>

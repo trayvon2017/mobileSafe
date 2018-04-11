@@ -34,9 +34,9 @@ public class SettingItemView extends RelativeLayout {
         super(context, attrs, defStyleAttr);
         View view = View.inflate(context, R.layout.setting_item_view, this);
         //这里传入null会怎么样
-        tv_title = (TextView) findViewById(R.id.tv_title);
-        tv_des = (TextView) findViewById(R.id.tv_des);
-        cb_update = (CheckBox) findViewById(R.id.cb_update);
+        tv_title = (TextView) view.findViewById(R.id.tv_title);
+        tv_des = (TextView) view.findViewById(R.id.tv_des);
+        cb_update = (CheckBox) view.findViewById(R.id.cb_update);
         String destitle = attrs.getAttributeValue(ConstantValues.NAME_SPACE, "destitle");
         deson = attrs.getAttributeValue(ConstantValues.NAME_SPACE,"deson");
         desoff = attrs.getAttributeValue(ConstantValues.NAME_SPACE,"desoff");
