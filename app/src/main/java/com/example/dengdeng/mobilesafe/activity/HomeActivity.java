@@ -65,6 +65,12 @@ public class HomeActivity extends AppCompatActivity {
                         }
 
                         break;
+                    case 1:
+                        //进入通信卫士 设置黑名单
+                        //高级工具
+                        Intent intent3 = new Intent(HomeActivity.this,BlackNumActivity.class);
+                        startActivity(intent3);
+                        break;
                     case 7:
                         //高级工具
                         Intent intent2 = new Intent(HomeActivity.this,AdvancedToolsActivity.class);
