@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,19 +29,23 @@ import com.example.dengdeng.mobilesafe.db.domain.Blacknum;
 import com.example.dengdeng.mobilesafe.utils.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class BlackNumActivity extends AppCompatActivity {
 
     private Button btn_add_blacknum;
     private Context mContext;
     private ListView lv_nums;
-
+    private BlacknumAdapter mAdapter;
     private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            lv_nums.notify();
+            mAdapter.notifyDataSetChanged();
         }
     };
+    private ArrayList<Blacknum> mNums;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +61,29 @@ public class BlackNumActivity extends AppCompatActivity {
         SQLiteDatabase database = openHelper.getReadableDatabase();
         database.close();
     }
+
+    public void addSomeTestData(View view) {
+
+        for (int i = 0;i<100;i++){
+            String phone = "151375807";
+            if (i<10){
+                phone = phone + 0 +i;
+            }else {
+                phone = phone + i;
+            }
+            Random random = new Random();
+            int mode = random.nextInt(3);
+            Blacknum blacknum = new Blacknum(phone, mode + 1);
+            BlacknumDao.getInstance(getApplicationContext()).insert(blacknum);
+            mNums.add(blacknum);
+        }
+        if (mAdapter == null){
+            mNums = BlacknumDao.getInstance(getApplicationContext()).findAll();
+            mAdapter = new BlacknumAdapter(mNums);
+        }
+        mAdapter.notifyDataSetChanged();
+    }
+
     class BlacknumAdapter extends BaseAdapter{
         ArrayList<Blacknum> nums = new ArrayList<Blacknum>();
         public BlacknumAdapter(ArrayList<Blacknum> nums) {
@@ -106,6 +134,7 @@ public class BlackNumActivity extends AppCompatActivity {
             viewHolder.iv_del_black_num.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //删除操作 ，是分成两个部分进行的，数据库操作和界面操作
                     BlacknumDao.getInstance(getApplicationContext()).del(blacknum.getPhone());
                     //TODO 删除之后更新页面显示，不推荐重新加载数据库，删除数据库的同时修改一下list即可
                     nums.remove(blacknum);
@@ -123,7 +152,35 @@ public class BlackNumActivity extends AppCompatActivity {
     private void initUI() {
 
         lv_nums = (ListView) findViewById(R.id.lv_nums);
-        lv_nums.setAdapter(new BlacknumAdapter(BlacknumDao.getInstance(getApplicationContext()).findAll()));
+        //首次加载只加载20，并且是倒序加载
+        mNums = BlacknumDao.getInstance(getApplicationContext()).findApart(0,20);
+        mAdapter = new BlacknumAdapter(mNums);
+        lv_nums.setAdapter(mAdapter);
+        lv_nums.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                //说明已经刷到最后一屏的listview
+                if (firstVisibleItem + visibleItemCount == totalItemCount){
+                    //获取最后一个listitem的view，
+                    View lastVisalbeItem = view.getChildAt(visibleItemCount - 1);
+                    //查询到的数据添加到list中 ，刷新adapter
+                    mNums.addAll(BlacknumDao.getInstance(getApplicationContext()).findApart(mNums.size(),20));
+                    mAdapter.notifyDataSetChanged();
+                    //判断最后一个itemview的底部和当前屏幕listview的底部是否重合重合之后加载数据
+
+                    if (lastVisalbeItem.getBottom()==view.getBottom()){
+
+                    }
+                }
+
+
+            }
+        });
         btn_add_blacknum = (Button)findViewById(R.id.btn_add_blacknum);
         btn_add_blacknum.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,6 +217,9 @@ public class BlackNumActivity extends AppCompatActivity {
                             //TODO 添加数据到本地数据库
                             BlacknumDao.getInstance(mContext).insert(blacknum);
                             dialog.dismiss();
+                            //不要每次增加一条都去更新数据库,添加的数据要显示在最前面
+                            mNums.add(0,blacknum);
+                            mAdapter.notifyDataSetChanged();
                         }else {
                             ToastUtils.makeToast(mContext,"电话号码不能为空");
                         }

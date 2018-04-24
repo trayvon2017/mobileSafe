@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.example.dengdeng.mobilesafe.R;
+import com.example.dengdeng.mobilesafe.service.BlacknumService;
 import com.example.dengdeng.mobilesafe.service.PhoneAddressService;
 import com.example.dengdeng.mobilesafe.utils.ConstantValues;
 import com.example.dengdeng.mobilesafe.utils.ServiceUtils;
@@ -29,6 +30,7 @@ public class SettingActivity extends AppCompatActivity {
     private SettingClickView mScvAddressStyle;
     private SettingClickView mScv_address_location;
     private String[] mStyle;
+    private SettingItemView mSetting_item_blacknum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +40,10 @@ public class SettingActivity extends AppCompatActivity {
         initPhoneLocationUI();
         initAddressStyleUI();
         initAddressLocationUI();
+        initBlackSettingUI();
     }
+
+
 
     /**
      * 初始化设置里面的归属地提示框位置
@@ -101,6 +106,30 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
         builder.show();
+    }
+    /**
+     * 初始化黑名单拦截的ui
+     */
+    private void initBlackSettingUI() {
+        mSetting_item_blacknum = (SettingItemView) findViewById(R.id.setting_item_blacknum);
+        // 根据服务是否开启来判断此处设置是否开启
+        boolean isRuning = ServiceUtils.isRuning(this, "com.example.dengdeng.mobilesafe.service.BlacknumService");
+        mSetting_item_blacknum.setCheck(isRuning);
+
+        //1,注册点击事件，
+        mSetting_item_blacknum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean checked = mSetting_item_blacknum.isChecked();
+                mSetting_item_blacknum.setCheck(!checked);
+                //判断，开启的时候开启服务，关闭的时候关闭服务
+                if (!checked){
+                    startService(new Intent(getApplicationContext(), BlacknumService.class));
+                }else{
+                    stopService(new Intent(getApplicationContext(), BlacknumService.class));
+                }
+            }
+        });
     }
 
     /**

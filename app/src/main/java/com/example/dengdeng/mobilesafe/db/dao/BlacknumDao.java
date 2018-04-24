@@ -31,6 +31,15 @@ public class BlacknumDao {
         return blacknumDao;
     }
 
+    public Blacknum findNumByPhone(String phone){
+        SQLiteDatabase db = openHelper.getReadableDatabase();
+        Cursor cursor = db.query("blacknum", new String[]{"mode"}, "phone = ?", new String[]{phone}, null, null, null);
+        if (cursor.moveToNext()){
+            int mode = cursor.getInt(cursor.getColumnIndex("mode"));
+            return new Blacknum(phone,mode);
+        }
+        return null;
+    }
     /**
      * 添加黑名单号码
      * @param blacknum 需要添加号码
@@ -52,6 +61,18 @@ public class BlacknumDao {
         ArrayList<Blacknum> nums = new ArrayList<>();
         SQLiteDatabase db = openHelper.getReadableDatabase();
         Cursor cursor = db.query("blacknum", null, null, null, null, null, null);
+        while (cursor.moveToNext()){
+            String phone = cursor.getString(cursor.getColumnIndex("phone"));
+            int mode = cursor.getInt(cursor.getColumnIndex("mode"));
+            Blacknum blacknum = new Blacknum(phone, mode);
+            nums.add(blacknum);
+        }
+        return nums;
+    }
+    public ArrayList<Blacknum> findApart(int fromIndex ,int length){
+        ArrayList<Blacknum> nums = new ArrayList<>();
+        SQLiteDatabase db = openHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from blacknum order by _id desc limit ?,?", new String[]{fromIndex+"",length+""});
         while (cursor.moveToNext()){
             String phone = cursor.getString(cursor.getColumnIndex("phone"));
             int mode = cursor.getInt(cursor.getColumnIndex("mode"));
