@@ -71,6 +71,11 @@ public class HomeActivity extends AppCompatActivity {
                         Intent intent3 = new Intent(HomeActivity.this,BlackNumActivity.class);
                         startActivity(intent3);
                         break;
+                    case 2:
+                        //进入软件管理
+                        startActivity(new Intent(HomeActivity.this,AppManageActivity.class));
+                        break;
+
                     case 7:
                         //高级工具
                         Intent intent2 = new Intent(HomeActivity.this,AdvancedToolsActivity.class);

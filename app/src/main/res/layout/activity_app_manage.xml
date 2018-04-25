@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.dengdeng.mobilesafe.activity.AppManageActivity">
+    <TextView
+        android:text="软件管理"
+        style="@style/MyTitleStyle" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="手机内部可用"
+            android:id="@+id/tv_phone_mem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_alignParentRight="true"
+            android:text="sd卡可用"
+            android:id="@+id/tv_sdcard_mem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ListView
+            android:id="@+id/lv_apps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </ListView>
+        <TextView
+            android:text="fixed_title"
+            android:background="#ccc"
+            android:id="@+id/tv_fixed_title"
+            android:textColor="#000"
+            android:textSize="18sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </FrameLayout>
+
+
+
+
+</LinearLayout>
