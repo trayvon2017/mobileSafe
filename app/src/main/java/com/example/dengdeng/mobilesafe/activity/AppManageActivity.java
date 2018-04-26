@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.dengdeng.mobilesafe.R;
@@ -25,7 +26,7 @@ import com.example.dengdeng.mobilesafe.utils.MemUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppManageActivity extends AppCompatActivity {
+public class AppManageActivity extends AppCompatActivity implements View.OnClickListener{
 
     private List<AppInfo> userApps = new ArrayList<AppInfo>();
     private List<AppInfo> sysApps = new ArrayList<AppInfo>();
@@ -35,6 +36,7 @@ public class AppManageActivity extends AppCompatActivity {
     private Context mContext;
     private MyAppAdapter mAppAdapter;
     private TextView mTv_fixed_title;
+    private TextView tv_popup_uninstall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,16 +73,70 @@ public class AppManageActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                PopupWindow popupWindow = new PopupWindow(View.inflate(getApplicationContext(),
-                        R.layout.popup_window_layout, null),
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        true);
-                popupWindow.setBackgroundDrawable(new ColorDrawable());
-                popupWindow.showAsDropDown(view,0,0);
+                if (position != 0 && position != userApps.size()+1){
+                    AppInfo appInfo = new AppInfo();
+                    if (position<userApps.size()+1){
+                        appInfo = userApps.get(position-1);
+                    }else {
+                        appInfo = sysApps.get(position-userApps.size()-2);
+                    }
+                    popupWindow(view,appInfo);
+                }
             }
         });
     }
+
+    private void popupWindow(View view, AppInfo appinfo) {
+        View popupView = View.inflate(getApplicationContext(),
+                R.layout.popup_window_layout, null);
+        TextView tv_popup_uninstall = (TextView) popupView.findViewById(R.id.tv_popup_uninstall);
+        TextView tv_popup_open = (TextView) popupView.findViewById(R.id.tv_popup_open);
+        TextView tv_popup_share = (TextView) popupView.findViewById(R.id.tv_popup_share);
+        tv_popup_uninstall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //卸载
+
+            }
+        });
+        tv_popup_open.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //打开应用
+            }
+        });
+        tv_popup_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //分享
+            }
+        });
+        PopupWindow popupWindow = new PopupWindow(popupView,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable());
+
+        popupWindow.showAsDropDown(view,view.getWidth()/2,-view.getHeight());
+    }
+
+    @Override
+    public void onClick(View v) {
+        /*switch (v.getId()){
+            case R.id.tv_popup_uninstall:
+
+                break;
+            case R.id.tv_popup_open:
+
+                break;
+            case R.id.tv_popup_share:
+
+                break;
+            default:
+                break;
+        }*/
+    }
+
     class MyAppAdapter extends BaseAdapter{
         private static final int TEXT_VIEW_TYPE = 0;
         private static final int ITEM_TYPE = 1;
