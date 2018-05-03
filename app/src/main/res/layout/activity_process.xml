@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.dengdeng.mobilesafe.activity.ProcessActivity">
+    <TextView
+        style="@style/MyTitleStyle"
+        android:text="进程管理"
+        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:padding="5dp"
+            android:layout_alignParentLeft="true"
+            android:text="进程总数"
+            android:id="@+id/tv_process_size"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:padding="5dp"
+            android:layout_alignParentRight="true"
+            android:text="可用运行内存"
+            android:id="@+id/tv_ram"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <FrameLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+        <ListView
+            android:id="@+id/lv_process"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </ListView>
+        <TextView
+            android:text="fixed_title"
+            android:background="#ccc"
+            android:id="@+id/tv_fixed_title_process"
+            android:textColor="#000"
+            android:textSize="18sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:padding="5dp"
+            android:textSize="18sp"
+            android:text="全选"
+            android:id="@+id/btn_select_all"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <Button
+            android:padding="5dp"
+            android:textSize="18sp"
+            android:text="反选"
+            android:id="@+id/btn_select_reverse"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <Button
+            android:padding="5dp"
+            android:textSize="18sp"
+            android:text="清理"
+            android:id="@+id/btn_clean"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <Button
+            android:padding="5dp"
+            android:textSize="18sp"
+            android:text="设置"
+            android:id="@+id/btn_setting"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>

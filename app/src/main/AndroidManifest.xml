@@ -113,7 +113,8 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".activity.AppManageActivity"></activity>
+        <activity android:name=".activity.AppManageActivity" />
+        <activity android:name=".activity.ProcessActivity"></activity>
     </application>
 
 </manifest>

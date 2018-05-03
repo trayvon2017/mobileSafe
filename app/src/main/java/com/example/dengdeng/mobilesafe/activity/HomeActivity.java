@@ -75,6 +75,10 @@ public class HomeActivity extends AppCompatActivity {
                         //进入软件管理
                         startActivity(new Intent(HomeActivity.this,AppManageActivity.class));
                         break;
+                    case 3:
+                        //进入进程管理
+                        startActivity(new Intent(HomeActivity.this,ProcessActivity.class));
+                        break;
 
                     case 7:
                         //高级工具

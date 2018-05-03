@@ -1,10 +1,15 @@
 package com.example.dengdeng.mobilesafe.activity;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.SmsManager;
+import android.telephony.SmsMessage;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -86,38 +91,71 @@ public class AppManageActivity extends AppCompatActivity implements View.OnClick
         });
     }
 
-    private void popupWindow(View view, AppInfo appinfo) {
-        View popupView = View.inflate(getApplicationContext(),
+    private void popupWindow(View view, final AppInfo appinfo) {
+        final View popupView = View.inflate(getApplicationContext(),
                 R.layout.popup_window_layout, null);
         TextView tv_popup_uninstall = (TextView) popupView.findViewById(R.id.tv_popup_uninstall);
         TextView tv_popup_open = (TextView) popupView.findViewById(R.id.tv_popup_open);
         TextView tv_popup_share = (TextView) popupView.findViewById(R.id.tv_popup_share);
+
+        final PopupWindow popupWindow = new PopupWindow(popupView,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                true);
         tv_popup_uninstall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //卸载
-
+                removeApp(appinfo);
+                popupWindow.dismiss();
             }
         });
         tv_popup_open.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //打开应用
+                startApp(appinfo);
+                popupWindow.dismiss();
             }
         });
         tv_popup_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //分享
+                //分享应用
+                shareApp(appinfo);
+                popupWindow.dismiss();
             }
         });
-        PopupWindow popupWindow = new PopupWindow(popupView,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                true);
         popupWindow.setBackgroundDrawable(new ColorDrawable());
 
         popupWindow.showAsDropDown(view,view.getWidth()/2,-view.getHeight());
+    }
+
+    private void shareApp(AppInfo appinfo) {
+        PackageManager packageManager = mContext.getPackageManager();
+        Intent intent = new Intent(Intent.ACTION_SEND);
+
+            intent.putExtra(Intent.EXTRA_TEXT,"分享一个应用给你，"+
+                    appinfo.appName);
+            intent.setType("text/plain");
+            startActivity(intent);
+
+    }
+
+    private void startApp(AppInfo appinfo) {
+        PackageManager packageManager = mContext.getPackageManager();
+        Intent intent = packageManager.getLaunchIntentForPackage(appinfo.packageName);
+        if(intent != null){
+            startActivity(intent);
+        }
+
+    }
+
+    private void removeApp(AppInfo appinfo) {
+        Uri uri = Uri.fromParts("package", appinfo.packageName, null);
+        //也可以写成Uri uri = Uri.parse("package:"+packageName);
+        Intent intent = new Intent(Intent.ACTION_DELETE, uri);
+        startActivity(intent);
     }
 
     @Override
